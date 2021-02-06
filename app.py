@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import pandas as pd
 import json
 from flask import Flask, render_template
@@ -21,7 +20,7 @@ def index():
 
     # use render_template to serve up the index.html
 
-    return render_template("index.html")
+    return render_template("index2.html")
 
 @app.route("/EmployeeData")
 def Employee_Data():
@@ -31,43 +30,13 @@ def Employee_Data():
     # Opening csv data file 
     employee_survey_df = pd.read_sql('SELECT * FROM employee_survey', con=conn)
     employee_survey_json = employee_survey_df.to_json(orient='records')
-    #parsed = json.loads(json_f)
-    #json_h = json.dumps(parsed,indent = 4)
-    #Employee_Data = csv.load(f)
-
-    # open the csv data file
-    # return that csv through the endpoint we created
-  
+   
+  #Return json to client
     return employee_survey_json
 
+#close db connection
     conn.close()
 
+#run the app in debug mode
 if __name__ == "__main__":
-=======
-import json
-from flask import Flask, render_template
-
-app = Flask(__name__)
-
-@app.route("/")
-def index():
-
-    # use render_template to serve up the index.html
-
-    return render_template("index.html")
-
-@app.route("/samples")
-def samples():
-    # Opening JSON file 
-    f = open('static/data/samples.json',)
-    samples_dat = json.load(f)
-
-    # open the json file, located at static/data/samples.json
-    # use json.load() to read in the file as json
-    # return that json through the Flask endpoini
-    
-    return samples_dat
-
-if __name__ == "__main__":
->>>>>>> 40e69bebccbdf4622eedae45bad750ad6d58dc2d
     app.run(debug=True)

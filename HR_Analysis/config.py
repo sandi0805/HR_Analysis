@@ -1,5 +1,0 @@
-remote_db_endpoint = 'databootcamp.crllqd59ljli.us-east-2.rds.amazonaws.com'
-remote_db_port = '3306'
-remote_db_user = 'recruit'
-remote_db_pwd = 'Dartlings!'
-remote_db_name = 'recruit_and_retain'
