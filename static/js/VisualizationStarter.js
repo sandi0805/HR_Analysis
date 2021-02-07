@@ -6,71 +6,48 @@
 
 //employee_survey_json
 
-// from data.js
-var employeeData = d3.json("/EmployeeData");
+function PopulateDropdown() {
+    
+    // comment this out because you will use this later in a different endpoint
+    /*
+    d3.json('/EmployeeData').then(data => {
 
-// Identify the table and tbody
-var tbody = d3.select('#tbody');
+        age = data.map(d => d['Age']);
 
-//build a table to see an overview
-function buildTable(employeeData){
-    employeeData.forEach(record => {
-        var row = tbody.append('tr');
-        Object.values(record).forEach(col => {
-            row.append('td').text(col);        
+        //console.log(age);
+        age.forEach(Age => {
+            d3.select('#selDataset').append('option').text(Age);
         });
-    })
+
+    });
+    */
+
+    d3.json('/api/jobrole').then(data => {
+        role = data.map(d => d['JobRole']);
+
+        role.forEach(role => {
+            d3.select('#roledropdown').append('option').text(role);
+        });
+
+    });
+
+    d3.json('/api/departments').then(data => {
+        department = data.map(d => d['Department']);
+
+        department.forEach(department => {
+            d3.select('#departmentdropdown').append('option').text(department);
+        });
+    
+    });
+
+    d3.json('/api/educationfield').then(data => {
+        educationField = data.map(d => d['EducationField']);
+
+        educationField.forEach(educField => {
+            d3.select('#educFieldDropdown').append('option').text(educField);
+        });
+    
+    });
+    
 }
-
-buildTable(employeeData);
-
-// d3.json("/EmployeeData").then(function(response)  {
-//     // Select the input element and get the raw HTML node
-//     // get reference to drop down
-//     var ddElement = d3.button("#dropdownMenuButton");
-  
-//     // get id values for dropdown options
-//     var idOptions = Object.values(response)[2].map(d => d.id).flat(1);
-//     idOptions.sort((a,b) => (a-b));
-  
-//     //loop through array of IDs and create new DOM node for each and append
-//     idOptions.forEach(id => {
-//       ddElement
-//         .append("option")
-//         .text(id)
-//         .property('value', id);
-//     });    
-  
-//     var firstId = idOptions[0];
-//     buildCharts(firstId);
-//     buildMetadata(firstId);
-  
-//   }); 
-
-// function showOptions() {
-//     d3.json('/EmployeeData').then(data => {
-//         var { names } = data;
-//         names.forEach(name => {
-//             d3.select('button').append('option').text(name);
-//         });
-//     });
-// };
-
-// function showData() {
-//     d3.json('/EmployeeData').then(data => {
-//         var { metadata, samples } = data;
-//         var selection = d3.select('select').property('value');
-//         d3.select('.panel-body').html('');
-//         metadata = metadata.filter(obj => obj.id == selection)[0];
-//         Object.entries(metadata).forEach(([key, val]) => {
-//             d3.select('.panel-body').append('h5').text(`${key.toUpperCase()}: ${val}`);
-//         });
-//         employeedata = employeedata.filter(obj => obj.id == selection)[0];
-//         var { otu_ids, otu_labels, sample_values } = samples;
-//         var barData = [{
-//             x: sample_values.slice(0,10).reverse(),
-//             y: otu_ids.slice(0,10).reverse().map(id => `OTU ${id}`),
-//             text: otu_labels.slice(0,10).reverse(),
-//             type: 'bar',
-//             orientation: 'h'
-//         }];
+PopulateDropdown();
