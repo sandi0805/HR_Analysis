@@ -1,19 +1,31 @@
 /**********
     BAR CHART
 **********/
-var data = [
+
+d3.json('/api/avg_rating_by_dept').then(data => {
+
+  departments = data.map(d => d['Department']);
+  ratings = data.map(d => d['AvgPerformanceRating']);
+  
+  var data = [
     {
-      x: ['giraffes', 'orangutans', 'monkeys'],
-      y: [20, 14, 23],
-      type: 'bar'
+      x: ratings,
+      y: departments,      
+      type: 'bar',
+      orientation: 'h'
     }
   ];
-  
+
   var layout = {
-    title: 'Our bar chart'
+    title: 'Performance Ratings by Department',
+    xaxis: {'title': 'Avg. Performance Rating'},
+    yaxis: {'title': 'Department'},
+    autosize: true
   };
   
-Plotly.newPlot('intro-bar-chart', data, layout);
+  Plotly.newPlot('intro-bar-chart', data, layout);
+
+});
 
 /********
  * GAUGE CHART
