@@ -133,18 +133,29 @@ def educ():
   #Return json to client
     return data_json
 
-@app.route("/api/employeecount")
+@app.route("/api/Annualcostturnover")
 def employeecount():
 
     conn = engine.connect()
 
     # Opening csv data file 
-    count_df = pd.read_sql('SELECT DISTINCT EmployeeCount FROM employee_survey', con=conn)
-    count_json = count_df.to_json(orient='records')
+
+    query = '''
+    SELECT
+        (Sum(MonthlyIncome) * 12) AS AnnualCostofAttrition,
+        count(PerformanceRating) AS performanceRate
+    FROM
+        employee_survey
+    WHERE 
+        attrition = "YES"
+       
+    '''
+    annual_cost_turnover_df = pd.read_sql(query, con=conn)
+    annual_cost_turnover_Json = annual_cost_turnover_df.to_json(orient='records')
     
     conn.close()
   #Return json to client
-    return count_df
+    return annual_cost_turnover_Json
 
 
 

@@ -48,6 +48,16 @@ function PopulateDropdown() {
         });
     
     });
+
+
+    d3.json('/api//api/Annualcostturnover').then(data => {
+        AnnualCostofAttrition = data.map(d => d['AnnualCostofAttrition']);
+
+        AnnualCostofAttrition.forEach(turnoverCost => {
+            d3.select('#educFieldDropdown').append('option').text(turnoverCost);
+        });
+    
+    });
     
 }
 PopulateDropdown();
