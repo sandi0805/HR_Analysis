@@ -264,7 +264,92 @@ def genderIncome():
     conn.close()
     return gender_income_json
 
+@app.route("/api/salaryhikeBytenure")
+def salaryhike_in_years():
 
+    conn = engine.connect()
+
+    query = '''
+     SELECT
+	    PercentSalaryHike AS percent_salary_hike,
+	    Attrition AS attrition,    
+	    Gender AS gender,
+	    Department AS department,
+	    JobSatisfaction AS jobsatisfaction,
+	    YearsAtCompany AS yearsatcompany,
+	    OverTime AS overtime,
+        YearsInCurrentRole AS yearsinrole,
+        (MonthlyIncome * 12) as annualincome,
+        YearsSinceLastPromotion AS promotionyears,
+        PerformanceRating AS performance,
+        Age as age
+    FROM 
+	    employee_survey
+    WHERE NOT (attrition is NULL OR
+		gender IS NULL OR
+        department IS NULL OR
+        jobsatisfaction IS NULL OR
+        yearsatcompany IS NULL);
+    '''
+
+    Salaryhike_tenure_df = pd.read_sql(query, con=conn)
+    Salaryhike_tenure_json = Salaryhike_tenure_df.to_json(orient='records')
+
+    conn.close()
+    return Salaryhike_tenure_json
+
+@app.route("/api/total_overtime_paid")
+def total_overtime_paid():
+    conn = engine.connect()
+    query = '''
+    SELECT 
+        overtime,
+        Attrition AS attrition,
+        SUM((MonthlyRate*12)) AS sum_annual_rate_paid,
+        SUM((MonthlyIncome*12)) AS sum_annual_income_paid,
+        SUM(((MonthlyRate-MonthlyIncome)*12)) AS total_overtime_paid
+    FROM 
+        employee_survey
+    WHERE
+        overtime = "yes"
+    GROUP BY 
+        attrition
+
+    '''
+    total_overtime_paid_df = pd.read_sql(query, con=conn)
+    total_overtime_paid_json = total_overtime_paid_df.to_json(orient='records')
+    #closing the database connection 
+    conn.close()
+    #Return json to client
+    return total_overtime_paid_json
+
+
+#close DB connection
+
+@app.route("/api/dept_attrition")
+def dept_attrition():
+
+    conn = engine.connect()
+
+    query = '''
+    SELECT 
+        department,
+        overtime,
+        attrition
+    FROM 
+        employee_survey
+    GROUP BY 
+        attrition
+    '''
+    dept_attrition_df = pd.read_sql(query, con=conn)
+    dept_attrition_df_json = dept_attrition_df.to_json(orient='records')
+    #closing the database connection 
+    conn.close()
+    #Return json to client
+    return dept_attrition_df_json
+
+    
+#close DB connection
 #run the app in debug mode
 if __name__ == "__main__":
     app.run(debug=True)
